@@ -5,10 +5,11 @@
 
 #include "Timer.h"
 
-const int BUZZER_PIN = 2; // Output pin for the buzzer/motor
-const int BUTTON_PIN = 4; // Input pin for the button to be held down
-const int RED_LED_PIN = 6; // Output pins for the LEDs
-const int GREEN_LED_PIN = 7; // Output pins for the LEDs
+const int BUZZER_PIN = 7; // Output pin for the buzzer/motor
+const int BUTTON_PIN = 8; // Input pin for the button to be held down
+const int RED_LED_PIN = 4; // Output pins for the LEDs
+const int GREEN_LED_PIN = 2; // Output pins for the LEDs
+const int BUTTON_V_PIN = 9; // Input pin for the button, provides the voltage needed
 
 const int SECONDS_TO_WAIT = 90; // The amount of time to wait before
 const int OSCILLATION_TIME = 1000; // The time between motor oscillations
@@ -29,10 +30,13 @@ void setup() {
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(GREEN_LED_PIN, OUTPUT);
+  pinMode(BUTTON_V_PIN, OUTPUT);
 
   // Set the Red LED on, and the others off by default
   digitalWrite(RED_LED_PIN, HIGH);
   digitalWrite(GREEN_LED_PIN, LOW);
+
+  digitalWrite(BUTTON_V_PIN, HIGH);
   
   Serial.println("Program started");
 }
