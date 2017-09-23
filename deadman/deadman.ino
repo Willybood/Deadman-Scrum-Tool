@@ -7,11 +7,11 @@
 #include "Timer.h"
 #include "pitches.h"
 
-const int BUZZER_PIN = 7; // Output pin for the buzzer/motor
+const int BUZZER_PIN = 7; // Output pin for the buzzer
 const int BUTTON_PIN = 8; // Input pin for the button to be held down
+const int BUTTON_V_PIN = 9; // Input pin for the button, provides the voltage needed
 const int RED_LED_PIN = 4; // Output pins for the LEDs
 const int GREEN_LED_PIN = 2; // Output pins for the LEDs
-const int BUTTON_V_PIN = 9; // Input pin for the button, provides the voltage needed
 
 const int SECONDS_TO_WAIT = 90UL; // The amount of time to wait before setting off the alarm
 const int TIME_BETWEEN_BUZZES = 3000; // The time between tones played
@@ -37,6 +37,7 @@ bool countingDown = false;
 
 // Function run once at startup
 void setup() {
+  Serial.println(("Entering %s", __FUNCTION__));
   Serial.begin(9600);
   
   pinMode(BUTTON_PIN, INPUT);
@@ -56,20 +57,21 @@ void setup() {
 
 // Plays the tone
 void playTone() {
+  Serial.println(("Entering %s", __FUNCTION__));
   // iterate over the notes of the melody:
   for (int thisNote = 0; thisNote < 8; thisNote++) {
 
     // to calculate the note duration, take one second divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
     int noteDuration = 1000 / noteDurations[thisNote];
-    tone(8, melody[thisNote], noteDuration);
+    tone(BUZZER_PIN, melody[thisNote], noteDuration);
 
     // to distinguish the notes, set a minimum time between them.
     // the note's duration + 30% seems to work well:
     const int pauseBetweenNotes = noteDuration * 1.30;
     delay(pauseBetweenNotes);
     // stop the tone playing:
-    noTone(8);
+    noTone(BUZZER_PIN);
   }
 }
 
@@ -104,6 +106,7 @@ void loop() {
   
   // read the state of the pushbutton value:
   int buttonState = digitalRead(BUTTON_PIN);
+  Serial.println(("Button state == %i", buttonState));
 
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
   if (buttonState == HIGH) {
