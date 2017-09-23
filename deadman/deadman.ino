@@ -27,6 +27,10 @@ int noteDurations[] = {
   4, 8, 8, 4, 4, 4, 4, 4
 };
 
+// This buffer is used to replace the fact that I don't have a pull-down resistor
+const int inputBufferLength = 100;
+int inputBuffer[inputBufferLength];
+
 // Events used by the timer library
 int buzzerEvent; // The event that controls the buzzing
 int timerEvent; // The event that counts down the timer
@@ -100,13 +104,29 @@ void stopCountdown() {
   timer.stop(timerEvent);
 }
 
+// Updates the buffer and returns the current state
+int updateBuffer(const int buttonInput) {
+  // Move the buffer along by 1
+  for(int i = (inputBufferLength - 2); i >= 0; --i) {
+    inputBuffer[i + 1] = inputBuffer[i];
+  }
+  // Add the new input to the buffer
+  inputBuffer[0] = buttonInput;
+  // return the result from the buffer
+  for(int i = 0; i < inputBufferLength; ++i) {
+    if(inputBuffer[i] == LOW) {
+      return LOW;
+    }
+  }
+  return HIGH;
+}
+
 // Function run repeatedly
 void loop() {
   timer.update();
   
   // read the state of the pushbutton value:
-  int buttonState = digitalRead(BUTTON_PIN);
-  Serial.println(("Button state == %i", buttonState));
+  int buttonState = updateBuffer(digitalRead(BUTTON_PIN));
 
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
   if (buttonState == HIGH) {
