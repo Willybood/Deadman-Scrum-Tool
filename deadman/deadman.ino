@@ -28,7 +28,7 @@ int noteDurations[] = {
 };
 
 // This buffer is used to replace the fact that I don't have a pull-down resistor
-const int inputBufferLength = 100;
+const int inputBufferLength = 1;
 int inputBuffer[inputBufferLength];
 
 // Events used by the timer library
@@ -50,9 +50,9 @@ void setup() {
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(BUTTON_V_PIN, OUTPUT);
 
-  // Set the Red LED on, and the others off by default
-  digitalWrite(RED_LED_PIN, HIGH);
-  digitalWrite(GREEN_LED_PIN, LOW);
+  // Set the Green LED on, and the others off by default
+  digitalWrite(RED_LED_PIN, LOW);
+  digitalWrite(GREEN_LED_PIN, HIGH);
 
   digitalWrite(BUTTON_V_PIN, HIGH);
   
@@ -132,20 +132,12 @@ void loop() {
   if (buttonState == HIGH) {
     if(false == countingDown) {
       startCountdown();
-      
-      // Switch to the Green LED
-      digitalWrite(GREEN_LED_PIN, HIGH);
-      digitalWrite(RED_LED_PIN, LOW);
     }
     countingDown = true;
   } else {
     if(true == countingDown) {
       stopBuzzing();
       stopCountdown();
-      
-      // Switch back to the Red LED
-      digitalWrite(RED_LED_PIN, HIGH);
-      digitalWrite(GREEN_LED_PIN, LOW);
     }
     countingDown = false;
   }
