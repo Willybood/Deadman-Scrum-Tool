@@ -22,14 +22,20 @@ int melody[] = {
 };
 const int NUM_OF_NOTES = 8;
 
+unsigned long millisWhenPushed = 0; // The value of millis (milliseconds since boot) when the button is pushed
+
+const long LONG_OSC_PERIOD = 1000L; // longest time in ms to flash the LED. Other variants are fractions of this number
+
 // note durations: 4 = quarter note, 8 = eighth note, etc.:
 int noteDurations[] = {
   4, 8, 8, 4, 4, 4, 4, 4
 };
 
 // Events used by the timer library
-int buzzerEvent; // The event that controls the buzzing
-int timerEvent; // The event that counts down the timer
+// By default are set to 'MAX_NUMBER_OF_EVENTS' so they cannot be set or unset accidentally
+int buzzerEvent = MAX_NUMBER_OF_EVENTS; // The event that controls the buzzing
+int timerEvent = MAX_NUMBER_OF_EVENTS; // The event that counts down the timer
+int ledOscillations = MAX_NUMBER_OF_EVENTS; // The event that controls the LED oscillations
 
 Timer timer; // Third party object type that controls the timing
 
@@ -43,15 +49,8 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT);
   digitalWrite(BUTTON_PIN, INPUT_PULLUP);
   pinMode(BUZZER_PIN, OUTPUT);
-  pinMode(RED_LED_PIN, OUTPUT);
-  pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(BUTTON_V_PIN, OUTPUT);
-
   digitalWrite(BUTTON_V_PIN, LOW);
-
-  // Set the LEDs to the default
-  digitalWrite(RED_LED_PIN, LOW);
-  digitalWrite(GREEN_LED_PIN, HIGH);
   
   Serial.println("Program started");
 }
@@ -79,6 +78,8 @@ void playTone() {
 // Starts the buzzing
 void startBuzzing() {
   Serial.println(("Entering %s", __FUNCTION__));
+  timer.stop(ledOscillations);
+  digitalWrite(RED_LED_PIN, HIGH);
   buzzerEvent = timer.every(TIME_BETWEEN_BUZZES, playTone);
 }
 
@@ -101,6 +102,22 @@ void stopCountdown() {
   timer.stop(timerEvent);
 }
 
+// Sets the pulsing of the LEDs.
+// Gets faster as the user reaches their talking limit, split into three hardcoded segments.
+void updatePulsingLEDs() {
+  const int NUM_OF_OSC_SEGMENTS = 3;
+  int currentIntSegment = 0;
+  for(int i = 0; i < NUM_OF_OSC_SEGMENTS; ++i) {
+    const unsigned long proportionOfWaitTime = ((unsigned long)SECONDS_TO_WAIT * 1000UL) / (unsigned long)NUM_OF_OSC_SEGMENTS;
+    if((millisWhenPushed - millis()) < (proportionOfWaitTime * i)) {
+      if(currentIntSegment != i) {
+        timer.stop(ledOscillations);
+        ledOscillations = timer.oscillate(RED_LED_PIN, (LONG_OSC_PERIOD / (long)NUM_OF_OSC_SEGMENTS) * (NUM_OF_OSC_SEGMENTS - i), HIGH);
+      }
+    }
+  }
+}
+
 // Function run repeatedly
 void loop() {
   timer.update();
@@ -112,17 +129,18 @@ void loop() {
   if (buttonState == LOW) {
     if(false == countingDown) {
       startCountdown();
-      digitalWrite(RED_LED_PIN, HIGH);
-      digitalWrite(GREEN_LED_PIN, LOW);
+      millisWhenPushed = millis();
     }
+    digitalWrite(GREEN_LED_PIN, LOW);
+    updatePulsingLEDs();
     countingDown = true;
   } else {
     if(true == countingDown) {
       stopBuzzing();
       stopCountdown();
-      digitalWrite(RED_LED_PIN, LOW);
-      digitalWrite(GREEN_LED_PIN, HIGH);
     }
+    digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(GREEN_LED_PIN, HIGH);
     countingDown = false;
   }
 }
