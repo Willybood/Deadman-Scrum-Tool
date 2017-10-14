@@ -60,7 +60,7 @@ void setup() {
 void playTone() {
   Serial.println(("Entering %s", __FUNCTION__));
   // iterate over the notes of the melody:
-  for (int thisNote = 0; thisNote < 8; thisNote++) {
+  for (int thisNote = 0; thisNote < NUM_OF_NOTES; thisNote++) {
 
     // to calculate the note duration, take one second divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
@@ -73,6 +73,8 @@ void playTone() {
     delay(pauseBetweenNotes);
     // stop the tone playing:
     noTone(BUZZER_PIN);
+    // Force loop to run inbetween each note to check if the button is depressed.
+    loop();
   }
 }
 
