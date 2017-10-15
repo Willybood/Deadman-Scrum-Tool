@@ -7,11 +7,20 @@
 #include "Timer.h"
 #include "pitches.h"
 
-const int BUZZER_PIN = 7; // Output pin for the buzzer
-const int BUTTON_PIN = 8; // Input pin for the button to be held down
-const int BUTTON_V_PIN = 9; // Input pin for the button, provides the voltage needed
-const int RED_LED_PIN = 4; // Output pins for the LEDs
-const int GREEN_LED_PIN = 2; // Output pins for the LEDs
+// Defines for the serial port, disables it for all non-prototype hardware
+#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
+#define serialPrint(x) Serial.println(x)
+#define serialBegin(x) Serial.begin(x)
+#else
+#define serialPrint(x)
+#define serialBegin(x)
+#endif
+
+const int BUZZER_PIN = 2; // Output pin for the buzzer
+const int BUTTON_PIN = 0; // Input pin for the button to be held down
+const int BUTTON_V_PIN = 1; // Input pin for the button, provides the voltage needed
+const int RED_LED_PIN = 3; // Output pins for the LEDs
+const int GREEN_LED_PIN = 4; // Output pins for the LEDs
 
 const int SECONDS_TO_WAIT = 90UL; // The amount of time to wait before setting off the alarm
 const int TIME_BETWEEN_BUZZES = 3000; // The time between tones played
@@ -43,8 +52,8 @@ bool countingDown = false;
 
 // Function run once at startup
 void setup() {
-  Serial.println(("Entering %s", __FUNCTION__));
-  Serial.begin(9600);
+  serialPrint(("Entering %s", __FUNCTION__));
+  serialBegin(9600);
   
   pinMode(BUTTON_PIN, INPUT);
   digitalWrite(BUTTON_PIN, INPUT_PULLUP);
@@ -52,12 +61,12 @@ void setup() {
   pinMode(BUTTON_V_PIN, OUTPUT);
   digitalWrite(BUTTON_V_PIN, LOW);
   
-  Serial.println("Program started");
+  serialPrint("Program started");
 }
 
 // Plays the tone
 void playTone() {
-  Serial.println(("Entering %s", __FUNCTION__));
+  serialPrint(("Entering %s", __FUNCTION__));
   // iterate over the notes of the melody:
   for (int thisNote = 0; thisNote < NUM_OF_NOTES; thisNote++) {
 
@@ -79,7 +88,7 @@ void playTone() {
 
 // Starts the buzzing
 void startBuzzing() {
-  Serial.println(("Entering %s", __FUNCTION__));
+  serialPrint(("Entering %s", __FUNCTION__));
   timer.stop(ledOscillations);
   digitalWrite(RED_LED_PIN, HIGH);
   buzzerEvent = timer.every(TIME_BETWEEN_BUZZES, playTone);
@@ -87,20 +96,20 @@ void startBuzzing() {
 
 // Stops the buzzing
 void stopBuzzing() {
-  Serial.println(("Entering %s", __FUNCTION__));
+  serialPrint(("Entering %s", __FUNCTION__));
   timer.stop(buzzerEvent);
 }
 
 // Starts the countdown
 void startCountdown() {
-  Serial.println(("Entering %s", __FUNCTION__));
+  serialPrint(("Entering %s", __FUNCTION__));
   const unsigned long timeToWait = SECONDS_TO_WAIT * 1000UL;
   timerEvent = timer.after(timeToWait, startBuzzing);
 }
 
 // Stops the countdown
 void stopCountdown() {
-  Serial.println(("Entering %s", __FUNCTION__));
+  serialPrint(("Entering %s", __FUNCTION__));
   timer.stop(timerEvent);
 }
 
