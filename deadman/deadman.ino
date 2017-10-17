@@ -25,6 +25,9 @@ const int GREEN_LED_PIN = 4; // Output pins for the LEDs
 const int SECONDS_TO_WAIT = 90UL; // The amount of time to wait before setting off the alarm
 const int TIME_BETWEEN_BUZZES = 3000; // The time between tones played
 
+const int NUM_OF_OSC_SEGMENTS = 9; // The number of segments of oscillation of the LED to make as the user gets closer to their limit
+int currentOscSegment = 0; // The current oscillating segment
+
 // notes in the melody:
 int melody[] = {
   NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
@@ -60,6 +63,9 @@ void setup() {
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(BUTTON_V_PIN, OUTPUT);
   digitalWrite(BUTTON_V_PIN, LOW);
+
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
   
   serialPrint("Program started");
 }
@@ -114,17 +120,17 @@ void stopCountdown() {
 }
 
 // Sets the pulsing of the LEDs.
-// Gets faster as the user reaches their talking limit, split into three hardcoded segments.
+// Gets faster as the user reaches their talking limit.
 void updatePulsingLEDs() {
-  const int NUM_OF_OSC_SEGMENTS = 3;
-  int currentIntSegment = 0;
-  for(int i = 0; i < NUM_OF_OSC_SEGMENTS; ++i) {
+  for(int i = 1; i < NUM_OF_OSC_SEGMENTS; ++i) {
+    const unsigned long millisSpent = millis() - millisWhenPushed; // The number of milliseconds ela[sed since the button was pushed.
     const unsigned long proportionOfWaitTime = ((unsigned long)SECONDS_TO_WAIT * 1000UL) / (unsigned long)NUM_OF_OSC_SEGMENTS;
-    if((millisWhenPushed - millis()) < (proportionOfWaitTime * i)) {
-      if(currentIntSegment != i) {
+    if((millisSpent < (proportionOfWaitTime * i)) && (millisSpent >= (proportionOfWaitTime * (i - 1)))) {
+      if(currentOscSegment != i) {
         timer.stop(ledOscillations);
-        ledOscillations = timer.oscillate(RED_LED_PIN, (LONG_OSC_PERIOD / (long)NUM_OF_OSC_SEGMENTS) * (NUM_OF_OSC_SEGMENTS - i), HIGH);
+        ledOscillations = timer.oscillate(RED_LED_PIN, (LONG_OSC_PERIOD / (long)NUM_OF_OSC_SEGMENTS) * (NUM_OF_OSC_SEGMENTS - i), digitalRead(RED_LED_PIN));
       }
+      currentOscSegment = i;
     }
   }
 }
@@ -141,6 +147,8 @@ void loop() {
     if(false == countingDown) {
       startCountdown();
       millisWhenPushed = millis();
+      currentOscSegment = 0;
+      digitalWrite(RED_LED_PIN, HIGH); // Turn the LED pin on when first pushed.
     }
     digitalWrite(GREEN_LED_PIN, LOW);
     updatePulsingLEDs();
