@@ -16,8 +16,8 @@
 #define serialBegin(x)
 #endif
 
-const int BUZZER_PIN = 2; // Output pin for the buzzer
-const int BUTTON_PIN = 0; // Input pin for the button to be held down
+const int BUZZER_PIN = 0; // Output pin for the buzzer
+const int BUTTON_PIN = 2; // Input pin for the button to be held down
 const int BUTTON_V_PIN = 1; // Input pin for the button, provides the voltage needed
 const int RED_LED_PIN = 3; // Output pins for the LEDs
 const int GREEN_LED_PIN = 4; // Output pins for the LEDs
@@ -60,7 +60,6 @@ void setup() {
   
   pinMode(BUTTON_PIN, INPUT);
   digitalWrite(BUTTON_PIN, INPUT_PULLUP);
-  pinMode(BUZZER_PIN, OUTPUT);
   pinMode(BUTTON_V_PIN, OUTPUT);
   digitalWrite(BUTTON_V_PIN, LOW);
 
