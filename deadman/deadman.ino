@@ -5,7 +5,7 @@
  */
 
 #include "Timer.h"
-#include "pitches.h"
+#include "ttone.h"
 
 // Defines for the serial port, disables it for all non-prototype hardware
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
@@ -16,9 +16,9 @@
 #define serialBegin(x)
 #endif
 
-const int BUZZER_PIN = 0; // Output pin for the buzzer
-const int BUTTON_PIN = 2; // Input pin for the button to be held down
-const int BUTTON_V_PIN = 1; // Input pin for the button, provides the voltage needed
+const int BUZZER_PIN = 1; // Output pin for the buzzer, required to be pin 1 for the ttone library
+const int BUTTON_PIN = 0; // Input pin for the button to be held down
+const int BUTTON_V_PIN = 2; // Input pin for the button, provides the voltage needed
 const int RED_LED_PIN = 3; // Output pins for the LEDs
 const int GREEN_LED_PIN = 4; // Output pins for the LEDs
 
@@ -30,7 +30,7 @@ int currentOscSegment = 0; // The current oscillating segment
 
 // notes in the melody:
 int melody[] = {
-  NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
+  C4, G3, G3, A3, G3, 0, B3, C4
 };
 const int NUM_OF_NOTES = 8;
 
@@ -65,6 +65,8 @@ void setup() {
 
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(GREEN_LED_PIN, OUTPUT);
+
+  pinMode(BUZZER_PIN, OUTPUT);
   
   serialPrint("Program started");
 }
@@ -78,16 +80,12 @@ void playTone() {
     // to calculate the note duration, take one second divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
     int noteDuration = 1000 / noteDurations[thisNote];
-    tone(BUZZER_PIN, melody[thisNote], noteDuration);
+    trinketTone(melody[thisNote], noteDuration);
 
     // to distinguish the notes, set a minimum time between them.
     // the note's duration + 30% seems to work well:
     const int pauseBetweenNotes = noteDuration * 1.30;
     delay(pauseBetweenNotes);
-    // stop the tone playing:
-    noTone(BUZZER_PIN);
-    // Force loop to run inbetween each note to check if the button is depressed.
-    loop();
   }
 }
 
