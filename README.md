@@ -24,6 +24,7 @@ The device consists of three prints:
 * [Two position switch](https://www.amazon.co.uk/gp/product/B007QAJMHO/ref=oh_aui_detailpage_o03_s00?ie=UTF8&psc=1)
 * [Low profile piezo sounder](https://www.maplin.co.uk/p/30v-very-low-profile-piezo-sounder-4mm-ku57m)
 * [RGB LED board](https://www.amazon.co.uk/kwmobile-RGB-LED-module-Arduino/dp/B01N248IOR/ref=sr_1_22?ie=UTF8&qid=1515148985&sr=8-22&keywords=RGB+LED+board), you can use a three color LED and a pair of resistors, but I had one of these lying around.
+
 I used some [gorilla glue](https://www.amazon.co.uk/gp/product/B009NQQJFC/ref=oh_aui_detailpage_o01_s00?ie=UTF8&psc=1) to hold some of the components in place.
 ![Fritzing diagram](/Board.png?raw=true "Fritzing diagram")
 *Fritzing diagram describing the components wiring*
