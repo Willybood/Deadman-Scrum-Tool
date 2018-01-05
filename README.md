@@ -32,4 +32,3 @@ I used some [gorilla glue](https://www.amazon.co.uk/gp/product/B009NQQJFC/ref=oh
 ## Special thanks
 * I'd like to thank my team for coming up with the idea and trying out my prototypes.
 * One inspiration for this came from the [Scrumato](https://github.com/platisd/scrumtato) stand up tool, which I would have built instead if only I had the components for it lying around around. It looks like a good tool, and I'm sure it would have worked too.
-[Scrumato](https://github.com/platisd/scrumtato)
