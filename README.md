@@ -16,8 +16,8 @@ The device runs on an Adafruit Trinket. The .ino file is available to upload [he
 The device consists of a set of electronic components inserted into three 3D printed parts.
 ### 3D printed parts
 The device consists of three prints:
-* [caseHalfLeft.stl](/model files/caseHalfLeft.stl?raw=true) and [caseHalfRight.stl](/model files/caseHalfRight.stl?raw=true). These are printed and then can be pushed in place with no glue needed.
-* [holder.stl](/model files/holder.stl?raw=true). This is the component that is gripped to close the switch. After printing it, it can be placed into the holes on the side of the case.
+* [caseHalfLeft.stl](https://github.com/Willybood/Deadman-Scrum-Tool/blob/master/model%20files/caseHalfLeft.stl) and [caseHalfRight.stl](https://github.com/Willybood/Deadman-Scrum-Tool/blob/master/model%20files/caseHalfRight.stl). These are printed and then can be pushed in place with no glue needed.
+* [holder.stl](https://github.com/Willybood/Deadman-Scrum-Tool/blob/master/model%20files/holder.stl). This is the component that is gripped to close the switch. After printing it, it can be placed into the holes on the side of the case.
 ### Components
 * [Adafruit Trinket](https://www.amazon.co.uk/gp/product/B00M40XTI4/ref=oh_aui_detailpage_o05_s00?ie=UTF8&psc=1)
 * [Hinge lever switch](https://www.amazon.co.uk/gp/product/B00M1ZTO2C/ref=oh_aui_detailpage_o04_s01?ie=UTF8&psc=1)
