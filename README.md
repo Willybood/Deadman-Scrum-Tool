@@ -1,5 +1,6 @@
 # The Deadman Scrum Tool
 ![Deadman Scrum Tool](/images/DeadmanPicSmall.jpg?raw=true "Deadman Scrum Tool")
+
 This project is for a deadman's switch that is passed around to different team members during a stand up. The user pushes a button on the device, then after 90 seconds, it begins buzzing to tell the user to end.
 ## About the Deadman
 While introducing Scrum to a new team, we quickly had issues with team members wanting to speak over each other during stand ups and extend the meeting beyond the 15 minutes. During one of the early retrospectives someone suggested a handheld device that lets people know if they've been talking for too long, and using left over parts and a public 3D printer I began prototyping. After introducing it, the stand ups have been smoother.
